@@ -11,7 +11,6 @@ export const registerController = async (req, res) => {
 
     // kiem tra xem co chua?
 
-    // tao user
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const user = await User.create({ ...req.body, password: hashedPassword });
