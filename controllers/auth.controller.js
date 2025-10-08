@@ -22,7 +22,7 @@ export const registerController = async (req, res) => {
     }
 
     user.password = undefined;
-    return res.status(400).json({
+    return res.status(201).json({
       message: "dang ky thanh cong",
       success: true,
       data: user,
