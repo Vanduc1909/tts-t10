@@ -3,12 +3,19 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export const registerController = async (req, res) => {
   try {
-    console.log(req.body);
-    console.log(req.query);
-    console.log(req.params);
+    // console.log(req.body);
+    // console.log(req.query);
+    // console.log(req.params);
 
     // validation
-
+    const { username } = req.body;
+    const checkUserExist = await User.findOne({ username });
+    if (checkUserExist) {
+      return res.status(400).json({
+        message: "Username đã ton tai",
+        success: false,
+      });
+    }
     // kiem tra xem co chua?
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -60,6 +67,20 @@ export const loginController = async (req, res) => {
       success: true,
       data: { user: checkUser, token },
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        message: "Không tìm thấy user với token này",
+      });
+    }
+    res.json(user);
   } catch (error) {
     console.log(error);
   }
